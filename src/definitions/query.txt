@@ -1,0 +1,11 @@
+{{$key := .StrippedMsg}}
+{{$db := index (toRune (upper (slice $key 0 1))) 0}}
+{{$definition := dbGet $db (upper $key)}}
+
+{{if $definition}}
+  {{ $embed := cembed 
+    "title" $definition.Key
+    "description" $definition.Value
+  }}
+  {{ sendMessage nil $embed }}
+{{else}}I don't know what {{$key}} means :({{end}}

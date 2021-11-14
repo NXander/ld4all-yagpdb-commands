@@ -1,0 +1,15 @@
+{{$list:= dbGet 0 "definition_list"}}
+{{if $list}}
+  {{$formattedList := "" }}
+  {{range $i, $k := $list.Value}}
+    {{if ne $i 0}}
+      {{$formattedList = joinStr ", " $formattedList $k}}
+    {{else}}
+      {{$formattedList = $k}}
+   {{end}}
+  {{end}}
+  Ask me about these words: [{{$formattedList}}]
+  To ask me for the definition of a word, use the command `? <word>`.
+{{else}}
+  I don't know any words.  Use `!learn <word> <definition>` to teach me some!  (The `!learn` command may be limited to mod use only)
+{{end}}

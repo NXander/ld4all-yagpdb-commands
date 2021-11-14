@@ -1,0 +1,29 @@
+{{$args := parseArgs 2 ""
+  (carg "string" "key")
+  (carg "string" "value")}}
+
+{{$key := $args.Get 0}}
+{{$value := $args.Get 1}}
+
+{{$db := index (toRune (upper (slice $key 0 1))) 0}}
+{{dbSet $db (upper $key) $value}}
+
+{{$entry := dbGet 0 "definition_list"}}
+{{if $entry}}
+  {{$list := $entry.Value}}
+  {{$found := false}}
+  {{range $i, $k := $list}}
+    {{if and (eq (upper $k) (upper $key))}}
+      {{$found = true}}
+    {{end}}
+  {{end}}
+  {{if not $found}}
+    {{$list = $list.Append $key}}
+    {{dbSet 0 "definition_list" $list}}
+  {{end}}
+{{else}}
+  {{$list := cslice $key}}
+  {{dbSet 0 "definition_list" $list}}
+{{end}}
+
+Learned `{{$key}}` as `{{$value}}`

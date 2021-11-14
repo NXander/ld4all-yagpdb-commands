@@ -1,0 +1,28 @@
+{{$key := .StrippedMsg}}
+{{$db := index (toRune (upper (slice $key 0 1))) 0}}
+
+{{dbDel $db (upper $key)}}
+
+{{$entry := dbGet 0 "definition_list"}}
+{{if $entry}}
+  {{$list := $entry.Value}}
+  {{$index := -1}}
+  {{range $i, $k := $list}}
+    {{if and (eq (upper $k) (upper $key))}}
+      {{$index = $i}}
+    {{end}}
+  {{end}}
+  {{if and (eq $index 0) (eq (len $list) 1)}}
+    {{dbDel 0 "definition_list"}}
+  {{else if eq $index 0}}
+    {{$list = slice $list (add $index 1)}}
+    {{dbSet 0 "definition_list" $list}}
+  {{else if eq $index (sub (len $list) 1)}}
+    {{$list = slice $list 0 $index}}
+    {{dbSet 0 "definition_list" $list}}
+  {{else if ne $index -1 }}
+    {{$list = (slice $list 0 $index).AppendSlice (slice $list (add $index 1))}}
+    {{dbSet 0 "definition_list" $list}}
+  {{end}}
+{{end}}
+I forgot {{$key}}.
