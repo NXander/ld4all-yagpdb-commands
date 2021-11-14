@@ -1,3 +1,5 @@
+{{/* Starts with "!learn" */}}
+
 {{$args := parseArgs 2 ""
   (carg "string" "key")
   (carg "string" "value")}}

@@ -1,3 +1,5 @@
+{{/* Starts with "!forget " */}}
+
 {{$key := .StrippedMsg}}
 {{$db := index (toRune (upper (slice $key 0 1))) 0}}
 

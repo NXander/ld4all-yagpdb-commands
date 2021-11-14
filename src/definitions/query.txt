@@ -1,3 +1,5 @@
+{{/* Starts with "? " */}}
+
 {{$key := .StrippedMsg}}
 {{$db := index (toRune (upper (slice $key 0 1))) 0}}
 {{$definition := dbGet $db (upper $key)}}

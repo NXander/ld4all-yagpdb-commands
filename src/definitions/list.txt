@@ -1,3 +1,5 @@
+{{/* Exact match "!list" */}}
+
 {{$list:= dbGet 0 "definition_list"}}
 {{if $list}}
   {{$formattedList := "" }}
