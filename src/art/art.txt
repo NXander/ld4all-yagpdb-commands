@@ -1,0 +1,42 @@
+{{if not .ExecData}}
+  {{execCC .CCID nil 10 (sdict "skip" true)}}
+{{else}}
+  {{$hasAttach := false}}
+  {{if .Message.Attachments}}
+    {{$hasAttach = true}}
+  {{end}}
+
+  {{$hasEmbed := false}}
+  {{$hasImageEmbed := false}}
+  {{if .Message.Embeds}}
+    {{$hasEmbed = true}}
+    {{if (eq (index .Message.Embeds 0).Type "image") }}
+      {{$hasImageEmbed = true}}
+    {{end}}
+  {{end}}
+
+  {{if (or $hasEmbed $hasAttach)}}
+    {{$imageUrl := ""}}
+    {{if $hasImageEmbed}}
+      {{$imageUrl = (index .Message.Embeds 0).URL}}
+    {{else if $hasAttach}}
+      {{$imageUrl = (index .Message.Attachments 0).URL }}
+    {{end}}
+    {{$embed := cembed 
+    "author" (sdict
+      "name" .Message.Member.Nick
+      "icon_url" (.Message.Author.AvatarURL "64")
+    )
+    "title" "New Art posted!"
+    "url" .Message.Link
+    "description" .Message.Content
+    "image" (sdict
+      "url" $imageUrl
+    )
+    }}
+    {{sendMessage "art-comments" $embed}}
+  {{else}}
+    {{deleteMessage nil .Message.ID}}
+    {{sendDM "I have removed your post from #art because I do not believe that it contains art. Please only post art in #art, all art related comments should be made in #art-comments. If I was mistaken, please message a mod."}}
+  {{end}}
+{{end}}
