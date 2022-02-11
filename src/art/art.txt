@@ -22,9 +22,13 @@
     {{else if $hasAttach}}
       {{$imageUrl = (index .Message.Attachments 0).URL }}
     {{end}}
+    {{$name := .Message.Member.Nick}}
+    {{if not $name}}
+      {{$name = .Message.Author.Username}}
+    {{end}}
     {{$embed := cembed 
     "author" (sdict
-      "name" .Message.Member.Nick
+      "name" $name
       "icon_url" (.Message.Author.AvatarURL "64")
     )
     "title" "New Art posted!"
